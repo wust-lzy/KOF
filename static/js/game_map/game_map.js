@@ -13,10 +13,12 @@ export class GameMap extends AcGameObject {
         this.$controller = new Controller(this.$canvas);
 
         this.root.$kof.append($(`<div class="kof-head">
-            <div class="kof-head-hp-0"><div></div></div>
+            <div class="kof-head-hp-0"><div><div></div></div></div>
             <div class="kof-head-timer">60</div>
-            <div class="kof-head-hp-1"><div></div></div>
+            <div class="kof-head-hp-1"><div><div></div></div></div>
         </div>`));
+        this.time_left = 60000; // 毫秒
+        this.$timer = this.root.$kof.find(".kof-head-timer");
     }
 
     start() {
@@ -24,6 +26,17 @@ export class GameMap extends AcGameObject {
     }
 
     update() {
+        this.time_left -= this.timedelta;
+        if (this.time_left <= 0) {
+            this.time_left = 0;
+            let [a, b] = this.root.players;
+            if (a.status !== 6 && b.status !== 6) {
+                a.status = b.status = 6;
+                a.vx = b.vx = 0;
+                a.frame_current_cnt = b.frame_current_cnt = 0;
+            }
+        }
+        this.$timer.text(parseInt(this.time_left / 1000));
         this.render();
     }
 

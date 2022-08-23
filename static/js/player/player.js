@@ -29,6 +29,7 @@ export class Player extends AcGameObject {
 
         this.hp = 100;
         this.$hp = this.root.$kof.find(`.kof-head-hp-${this.id}>div`);
+        this.$hp_div = this.root.$kof.find(`.kof-head-hp-${this.id}>div>div`);
     }
 
     move() {
@@ -120,12 +121,18 @@ export class Player extends AcGameObject {
         this.status = 5;
         this.frame_current_cnt = 0;
         this.hp = Math.max(this.hp - 20, 0);
+        // 红色血条
         this.$hp.animate({
+            width: this.$hp.parent().width() * this.hp / 100
+        }, 800);
+        // 绿色血条
+        this.$hp_div.animate({
             width: this.$hp.parent().width() * this.hp / 100
         }, 300);
         // this.$hp.width(this.$hp.parent().width() * this.hp / 100);
         if (this.hp === 0) {
             this.status = 6;
+            this.vx = 0;
             this.frame_current_cnt = 0;
         }
 
@@ -148,7 +155,7 @@ export class Player extends AcGameObject {
                     x1: me.x - 120 - 100 + me.width,
                     y1: me.y + 40,
                     x2: me.x - 120 - 100 + me.width + 100,
-                    y2: me.x - 120 - 100 + me.width + 20,
+                    y2: me.y + 40 + 20,
                 };
             }
             let r2 = {
